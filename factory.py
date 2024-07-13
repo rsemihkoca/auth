@@ -14,7 +14,7 @@ class ExtendedFastAPI(FastAPI):
             redoc_url="/redoc",
             openapi_url="/openapi.json"
         )
-        self.mqtt_client = self._initialize_mqtt_client()
+        self.mqtt_client: MQTT = self._initialize_mqtt_client()
         self.logger = self._initialize_logger()
         self._initialize_routers()
 

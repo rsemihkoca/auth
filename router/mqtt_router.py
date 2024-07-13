@@ -46,7 +46,7 @@ async def subscribe_topic(topic: SubscribeTopic):
 
 @router.post("/unsubscribe")
 async def unsubscribe_topic(topic: UnsubscribeTopic):
-    app = AppFactory().get_app().app
+    app = AppFactory().get_app()
 
     try:
         app.mqtt_client.unsubscribe(topic.topic)

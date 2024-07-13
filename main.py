@@ -34,7 +34,8 @@ def read_root():
 @app.post("/client", response_model=ClientCreateResponse)
 def create_client(request: ClientCreateRequest, db: Session = Depends(get_db)):
     mac_address = request.mac_address
-    existing_client = db.query(MQTTClient).filter(MQTTClient.serial_number == mac_address).first()
+
+    existing_client = db.query(MQTTClient).filter(MQTTClient.serial_number.__eq__(mac_address)).first()
     if existing_client:
         raise HTTPException(status_code=400, detail="Client already exists")
 
@@ -48,7 +49,7 @@ def create_client(request: ClientCreateRequest, db: Session = Depends(get_db)):
     db.commit()
 
     # Publish MQTT message
-    app.mqtt_client.publish_message(f"CLIENT/{mac_address}/LOG", "Device record and topic created")
+    app.mqtt_client.publish(f"CLIENT/{mac_address}/LOG", "Device record and topic created")
 
     response = ClientCreateResponse(
         publish_topic=f"CLIENT/{mac_address}/INFERENCE",
