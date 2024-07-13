@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Boolean, DateTime
-from database import Base
+from database.db import Base
 
 class MQTTClient(Base):
     __tablename__ = "mqtt_client"

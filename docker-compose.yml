@@ -12,9 +12,9 @@ services:
 
   web:
     build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn database.main:database --host 0.0.0.0 --port 8000
     volumes:
-      - .:/app
+      - .:/database
     ports:
       - "8000:8000"
     depends_on:
