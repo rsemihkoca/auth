@@ -5,6 +5,6 @@ class MQTTClient(Base):
     __tablename__ = "mqtt_client"
 
     serial_number = Column(String, primary_key=True, index=True)
-    target = Column(String, index=True)
+    target = Column(String, default="")
     is_disabled = Column(Boolean, default=False)
-    last_update_time = Column(DateTime)
+    last_update_time = Column(String)
