@@ -1,23 +1,36 @@
+import hashlib
+from fastapi import APIRouter, Depends
+
+from database.db import get_db, SessionLocal
+from database.models import MQTTClient
+from factory import AppFactory
+from model.dto import BrokerAuthenticationResponse, BrokerAuthenticationRequest
+router = APIRouter(
+    # prefix="/mqtt",
+    tags=["AUTH"],
+    responses={404: {"description": "Not found"}},
+)
 
 
+@router.post("/auth", response_model=BrokerAuthenticationResponse)
+async def authenticate(clientid: str, request: BrokerAuthenticationRequest,
+                       db: SessionLocal = Depends(get_db)):
 
+    app = AppFactory().get_app()
 
-@app.get("/client/{mac_address}", response_model=BrokerAuthenticationResponse)
-def get_client_status(mac_address: str, request: BrokerAuthenticationRequest, db: Session = Depends(get_db)):
-
-    client = db.query(MQTTClient).filter(MQTTClient.serial_number == mac_address).first()
+    client = db.query(MQTTClient).filter(MQTTClient.client_id == clientid).first()
     if not client:
-        app.logger.info(f"Client not found: {mac_address}")
+        app.logger.error(f"Client not found: {clientid}")
         return BrokerAuthenticationResponse(result="deny")
 
     if client.is_disabled:
-        app.logger.info(f"Client is disabled: {mac_address}")
+        app.logger.error(f"Client is disabled: {clientid}")
         return BrokerAuthenticationResponse(result="deny")
 
     hashed_password = hashlib.sha256(request.password.encode()).hexdigest()
 
     if hashed_password != client.password:
-        app.logger.info(f"Invalid password: {mac_address}")
+        app.logger.error(f"Invalid password: {clientid}")
         return BrokerAuthenticationResponse(result="deny")
 
     return BrokerAuthenticationResponse(result="allow", is_superuser=client.is_superuser)
