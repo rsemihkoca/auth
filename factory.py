@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI, Depends
 from client.mqtt_client import MQTT
+from model.constant import Constant
 
 
 class ExtendedFastAPI(FastAPI):
@@ -19,15 +20,18 @@ class ExtendedFastAPI(FastAPI):
         self._initialize_routers()
 
     def _initialize_routers(self):
-        from router import mqtt_router  # Import here to avoid circular import
+        from router import home_router, auth_router, mqtt_router, client_router
         self.include_router(mqtt_router.router)
+        self.include_router(client_router.router)
+        self.include_router(auth_router.router)
+        self.include_router(home_router.router)
 
     def _initialize_mqtt_client(self):
-        broker = "emqx.local"
-        port = 1883
+        broker = Constant.Broker.HOST
+        port = Constant.Broker.PORT
         client_id = "auth_client"
         username = "ubuntu"
-        password = "Qq\"123456"
+        password = "xIH<7r11m4V@"
 
         mqtt_client = MQTT(broker, port, client_id, username, password)
         mqtt_client.start()
