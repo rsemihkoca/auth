@@ -39,6 +39,7 @@ def create_client(request: ClientCreateRequest, db: SessionLocal = Depends(get_d
             password=existing_client.password
         )
         topics = [
+            # {f"CLIENT/{existing_client.client_id}/KGH": "PUBLISH"},
             {f"CLIENT/{existing_client.client_id}/INFERENCE": "PUBLISH"},
             {f"CLIENT/{existing_client.client_id}/LOG": "PUBLISH"},
             {f"CLIENT/{existing_client.client_id}/STATE": "PUBLISH"},
@@ -76,6 +77,7 @@ def create_client(request: ClientCreateRequest, db: SessionLocal = Depends(get_d
     app.mqtt_client.publish(f"CLIENT/{client_id}/LOG", "Device record and topic created")
 
     topics = [
+        # {f"CLIENT/{client_id}/KGH": "PUBLISH"},
         {f"CLIENT/{client_id}/INFERENCE": "PUBLISH"},
         {f"CLIENT/{client_id}/LOG": "PUBLISH"},
         {f"CLIENT/{client_id}/STATE": "PUBLISH"},
