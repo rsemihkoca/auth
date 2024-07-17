@@ -14,7 +14,7 @@ class BrokerResponse(BaseModel):
 
 class ClientCreateResponse(BaseModel):
     broker_cred: BrokerResponse
-    topics: list[dict[str, str]]
+    # topics: list[dict[str, str]]
     # publish_topic: str
     # log_topic: str
     # state_topic: str

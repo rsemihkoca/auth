@@ -1,7 +1,6 @@
 import hashlib
 import secrets
 from datetime import datetime
-from http.client import HTTPException
 
 from fastapi import APIRouter, Depends
 
@@ -25,6 +24,9 @@ def create_client(request: ClientCreateRequest, db: SessionLocal = Depends(get_d
     client_id = request.client_id
     username = request.username
 
+    if not client_id or not username:
+        raise ValueError("Client ID and username are required")
+
     # check if client already exists
     existing_client = db.query(MQTTClient).filter(MQTTClient.client_id == client_id).first()
     if existing_client:
@@ -38,16 +40,16 @@ def create_client(request: ClientCreateRequest, db: SessionLocal = Depends(get_d
             username=existing_client.username,
             password=existing_client.password
         )
-        topics = [
-            # {f"CLIENT/{existing_client.client_id}/KGH": "PUBLISH"},
-            {f"CLIENT/{existing_client.client_id}/INFERENCE": "PUBLISH"},
-            {f"CLIENT/{existing_client.client_id}/LOG": "PUBLISH"},
-            {f"CLIENT/{existing_client.client_id}/STATE": "PUBLISH"},
-            {f"CLIENT/{existing_client.client_id}/COMMAND": "SUBSCRIBE"}
-        ]
+        # topics = [
+        #     {f"CLIENT/{existing_client.client_id}/KGH": "PUBLISH"},
+            # {f"CLIENT/{existing_client.client_id}/INFERENCE": "PUBLISH"},
+            # {f"CLIENT/{existing_client.client_id}/LOG": "PUBLISH"},
+            # {f"CLIENT/{existing_client.client_id}/STATE": "PUBLISH"},
+            # {f"CLIENT/{existing_client.client_id}/COMMAND": "SUBSCRIBE"}
+        # ]
         response = ClientCreateResponse(
             broker_cred=broker,
-            topics=topics,
+            # topics=topics,
         )
         return response
 
@@ -76,16 +78,16 @@ def create_client(request: ClientCreateRequest, db: SessionLocal = Depends(get_d
     # Publish MQTT message
     app.mqtt_client.publish(f"CLIENT/{client_id}/LOG", "Device record and topic created")
 
-    topics = [
+    # topics = [
         # {f"CLIENT/{client_id}/KGH": "PUBLISH"},
-        {f"CLIENT/{client_id}/INFERENCE": "PUBLISH"},
-        {f"CLIENT/{client_id}/LOG": "PUBLISH"},
-        {f"CLIENT/{client_id}/STATE": "PUBLISH"},
-        {f"CLIENT/{client_id}/COMMAND": "SUBSCRIBE"}
-    ]
+        # {f"CLIENT/{client_id}/INFERENCE": "PUBLISH"},
+        # {f"CLIENT/{client_id}/LOG": "PUBLISH"},
+        # {f"CLIENT/{client_id}/STATE": "PUBLISH"},
+        # {f"CLIENT/{client_id}/COMMAND": "SUBSCRIBE"}
+    # ]
     response = ClientCreateResponse(
         broker_cred=broker,
-        topics=topics,
+        # topics=topics,
     )
     return response
 
