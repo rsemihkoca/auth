@@ -22,6 +22,7 @@ class ClientCreateResponse(BaseModel):
 
 
 class BrokerAuthenticationRequest(BaseModel):
+    client_id: str
     username: str
     password: str
 

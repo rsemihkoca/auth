@@ -1,4 +1,8 @@
 
+from config.env_config import EnvironmentConfig
+
+env = EnvironmentConfig()
+
 
 class Constant:
 
@@ -9,5 +13,10 @@ class Constant:
             DATETIME = "%Y-%m-%d %H:%M:%S"
 
     class Broker:
-        HOST = "emqx.local"
-        PORT = 1883
+        HOST = env.get('BROKER')
+        PORT = env.get('PORT')
+        CLIENT_ID = env.get('CLIENT_ID')
+        BROKER_USERNAME = env.get('BROKER_USERNAME')
+        BROKER_PASSWORD = env.get('BROKER_PASSWORD')
+        HASHED_PASSWORD = env.get('HASHED_PASSWORD')
+

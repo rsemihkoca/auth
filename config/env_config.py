@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 class EnvironmentConfig:
-    def __init__(self, env_file='.env'):
+    def __init__(self, env_file='./.env'):
         self.env_file = env_file
         self.load_env()
 

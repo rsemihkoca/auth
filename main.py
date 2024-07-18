@@ -11,6 +11,7 @@ import datetime
 
 from exception.exception import AbstractException
 from factory import AppFactory, ExtendedFastAPI
+from model.constant import Constant
 
 Base.metadata.create_all(bind=engine)
 
@@ -43,18 +44,13 @@ async def generic_exception_handler(request: Request, exc: Exception):
 if __name__ == "__main__":
     app.logger.log(10, "MQTT client started")
 
-    config = EnvironmentConfig()
-    client_id = config.get('CLIENT_ID')
-    username = config.get('USERNAME')
-    password = config.get('PASSWORD')
-
-
     with SessionLocal() as db:
         db.query(MQTTClient).delete()
         new_client = MQTTClient(
-            client_id=client_id,
-            username=username,
-            password=password,
+            client_id=Constant.Broker.CLIENT_ID,
+            username=Constant.Broker.BROKER_USERNAME,
+            password=Constant.Broker.BROKER_PASSWORD,
+            hashed_password=Constant.Broker.HASHED_PASSWORD,
             is_superuser=True,
             target="",
             is_disabled=False,

@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI, Depends
 from client.mqtt_client import MQTT
 from model.constant import Constant
-
+from config.env_config import EnvironmentConfig
 
 class ExtendedFastAPI(FastAPI):
     def __init__(self):
@@ -27,11 +27,13 @@ class ExtendedFastAPI(FastAPI):
         self.include_router(home_router.router)
 
     def _initialize_mqtt_client(self):
+
         broker = Constant.Broker.HOST
         port = Constant.Broker.PORT
-        client_id = "auth_client"
-        username = "ubuntu"
-        password = "xIH<7r11m4V@"
+        client_id = Constant.Broker.CLIENT_ID
+        username = Constant.Broker.BROKER_USERNAME
+        password = Constant.Broker.BROKER_PASSWORD
+
 
         mqtt_client = MQTT(broker, port, client_id, username, password)
         mqtt_client.start()

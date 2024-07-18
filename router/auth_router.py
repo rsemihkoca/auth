@@ -13,9 +13,9 @@ router = APIRouter(
 
 
 @router.post("/auth", response_model=BrokerAuthenticationResponse)
-async def authenticate(clientid: str, request: BrokerAuthenticationRequest,
+async def authenticate(request: BrokerAuthenticationRequest,
                        db: SessionLocal = Depends(get_db)):
-
+    clientid = request.client_id
     app = AppFactory().get_app()
 
     client = db.query(MQTTClient).filter(MQTTClient.client_id == clientid).first()
@@ -29,7 +29,7 @@ async def authenticate(clientid: str, request: BrokerAuthenticationRequest,
 
     hashed_password = hashlib.sha256(request.password.encode()).hexdigest()
 
-    if hashed_password != client.password:
+    if hashed_password != client.hashed_password:
         app.logger.error(f"Invalid password: {clientid}")
         return BrokerAuthenticationResponse(result="deny")
 
