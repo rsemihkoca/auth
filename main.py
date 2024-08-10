@@ -56,7 +56,32 @@ if __name__ == "__main__":
             is_disabled=False,
             last_update_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
+
+        mqttx_be72eebf = MQTTClient(
+            client_id="mqttx_be72eebf",
+            username="mqttx",
+            password="38qFCidDkIg",
+            hashed_password="c2080dc6ea3c70652b077cc176c004fffe2940ff29dccf9b972444c732cd9a11",
+            is_superuser=False,
+            target="",
+            is_disabled=False,
+            last_update_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+
+        mqtt_client_1 = MQTTClient(
+            client_id="esp-1092",
+            username="mqtt_espressif",
+            password="38qFCidDkIg",
+            hashed_password="c2080dc6ea3c70652b077cc176c004fffe2940ff29dccf9b972444c732cd9a11",
+            is_superuser=False,
+            target="",
+            is_disabled=False,
+            last_update_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+
         db.add(new_client)
+        db.add(mqttx_be72eebf)
+        db.add(mqtt_client_1)
         db.commit()
 
     uvicorn.run(app, host="0.0.0.0", port=8000)
